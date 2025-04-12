@@ -1,0 +1,156 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
+
+const idioms = [
+  {
+    idiom: "Break the ice",
+    translation: "Растопить лёд",
+    explanation: "Начать общение в напряжённой или незнакомой обстановке.",
+    example: "He told a joke to break the ice at the meeting.",
+    image: "https://images.unsplash.com/photo-icebreaker"
+  },
+  {
+    idiom: "Spill the beans",
+    translation: "Выдать секрет",
+    explanation: "Случайно или намеренно рассказать секрет.",
+    example: "She spilled the beans about the surprise party.",
+    image: "https://images.unsplash.com/photo-beans"
+  },
+  {
+    idiom: "Hit the sack",
+    translation: "Лечь спать",
+    explanation: "Пойти спать.",
+    example: "I'm really tired, I'm going to hit the sack.",
+    image: "https://images.unsplash.com/photo-bed"
+  },
+  {
+    idiom: "Costs an arm and a leg",
+    translation: "Очень дорого",
+    explanation: "Стоить целое состояние.",
+    example: "That new phone costs an arm and a leg!",
+    image: "https://images.unsplash.com/photo-money"
+  },
+  {
+    idiom: "Under the weather",
+    translation: "Неважно себя чувствовать",
+    explanation: "Быть больным или чувствовать недомогание.",
+    example: "I'm feeling a bit under the weather today.",
+    image: "https://images.unsplash.com/photo-sick"
+  },
+  {
+    idiom: "Let the cat out of the bag",
+    translation: "Выдать секрет",
+    explanation: "Случайно раскрыть тайну.",
+    example: "He let the cat out of the bag about the gift.",
+    image: "https://images.unsplash.com/photo-cat"
+  },
+  {
+    idiom: "Bite the bullet",
+    translation: "Стиснуть зубы",
+    explanation: "Мужественно выдержать трудную ситуацию.",
+    example: "He had to bite the bullet and admit his mistake.",
+    image: "https://images.unsplash.com/photo-bullet"
+  },
+  {
+    idiom: "Hit the nail on the head",
+    translation: "Попасть в точку",
+    explanation: "Точно описать или понять что-то.",
+    example: "You really hit the nail on the head with that comment.",
+    image: "https://images.unsplash.com/photo-hammer"
+  },
+  {
+    idiom: "Kick the bucket",
+    translation: "Отбросить коньки",
+    explanation: "Умереть (разговорный стиль).",
+    example: "He kicked the bucket peacefully in his sleep.",
+    image: "https://images.unsplash.com/photo-bucket"
+  },
+  {
+    idiom: "Piece of cake",
+    translation: "Проще простого",
+    explanation: "Очень легко.",
+    example: "The test was a piece of cake.",
+    image: "https://images.unsplash.com/photo-cake"
+  }
+];
+
+export default function IdiomsPage() {
+  const [darkMode, setDarkMode] = useState(true);
+
+  const bg = darkMode ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900";
+  const cardBg = darkMode ? "bg-gray-800 border-gray-700" : "bg-gray-100 border-gray-300";
+  const textSecondary = darkMode ? "text-gray-300" : "text-gray-700";
+  const textTertiary = darkMode ? "text-gray-400" : "text-gray-500";
+
+  const shareSite = async () => {
+    try {
+      await navigator.share({
+        title: "Английские Идиомы",
+        text: "Посмотри сайт с идиомами!",
+        url: window.location.href
+      });
+    } catch (err) {
+      alert("Не удалось поделиться: " + err);
+    }
+  };
+
+  return (
+    <div className={`${bg} min-h-screen p-4 sm:p-8 transition-colors duration-300 relative`}>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center w-full">Английские Идиомы и Русские Аналоги</h1>
+        <div className="flex items-center gap-2">
+          <span className="text-sm">🌞</span>
+          <Switch checked={darkMode} onCheckedChange={setDarkMode} />
+          <span className="text-sm">🌙</span>
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
+        <Button
+          onClick={() => {
+            const siteURL = window.location.href;
+            window.open(`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(siteURL)}`, '_blank');
+          }}
+          className="bg-blue-500 hover:bg-blue-600 text-white w-full sm:w-auto"
+        >
+          🔗 Создать QR-код для этого сайта
+        </Button>
+        <Button
+          onClick={shareSite}
+          className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto"
+        >
+          📤 Поделиться
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {idioms.map((item, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: index * 0.1 }}
+          >
+            <Card className={`${cardBg} shadow-xl rounded-2xl transition-all`}>
+              <img src={item.image} alt={item.idiom} className="w-full h-48 object-cover rounded-t-2xl" />
+              <CardContent className="p-4">
+                <h2 className="text-xl font-semibold mb-2">{item.idiom}</h2>
+                <Badge variant="secondary" className="mb-2">{item.translation}</Badge>
+                <p className={`mb-2 text-sm ${textSecondary}`}>{item.explanation}</p>
+                <p className={`italic text-sm ${textTertiary}`}>Example: "{item.example}"</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="mt-12 text-center text-xs text-gray-500">
+        Created by <span className="font-semibold">Andrey Bogdanov</span>
+      </div>
+    </div>
+  );
+}
